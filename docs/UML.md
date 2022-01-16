@@ -1,7 +1,11 @@
 # UML diagram
 ## Use case
 
-![TUse cases](./use_cases.png)
+![TUse cases](./imgs/use_cases.png)
 ## System Components
 
-![System Components](./components.png)
+![System Components](./imgs/components.png)
+
+## Class diagrams
+
+![UML Class](./imgs/UML_Class.png)
