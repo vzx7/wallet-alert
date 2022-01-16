@@ -1,3 +1,7 @@
 # UML diagram
 ## Use case
-![This is an image](./use_cases.png)
+
+![TUse cases](./use_cases.png)
+## System Components
+
+![System Components](./components.png)
