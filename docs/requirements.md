@@ -9,3 +9,4 @@
 - The application must work on a timer and analyze at least once an hour.
 - The application should optimize its resources and data and should not grow out of control.
 - When starting the application, the user should be able to send a list of mailing addresses for mailings.
+- The application must be available for completion from the console.

@@ -12,5 +12,6 @@
     - If negative - positive < 2 & >= 0 - there is nothing to worry about, a correction is observed;
     - If negative – positive < 0 – it is necessary to send an alert about bullish sentiment in the market;
 - After completion of the bypass, we reset the counters and wait for the time of the next bypass of wallets.
+- The application must be available for completion from the console.
 - Once a week we send a list of wallet balances to the specified email addresses.
 - Once a year (December 31) we optimize the database of wallet balances, clear all balance changes for the past year, leaving only the balances of the first Mondays of the month.
