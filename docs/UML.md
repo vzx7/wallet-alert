@@ -8,4 +8,4 @@
 
 ## Class diagrams
 
-![UML Class](./imgs/UML_Class.png)
+![UML Class](./imgs/uml_class.png)
