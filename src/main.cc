@@ -1,9 +1,15 @@
+#include <timer.hpp>
 #include <iostream>
 #include <fstream>
 #include <cstdio>
 #include <string>
 
 using namespace std;
+
+void foo()
+{
+    cout << "Timer" << endl;
+}
 
 /**
  * @brief Application start options
@@ -177,6 +183,10 @@ int main(int argc, const char *argv[])
         cerr << msg << endl;
         return 1;
     }
+
+    Timer timer;
+
+    timer.add(chrono::milliseconds(1000), foo);
 
     return 0;
 }
