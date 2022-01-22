@@ -56,7 +56,7 @@ int save_PID()
     string errmsg = "ERROR: The PID has not been saved!";
     try
     {
-        int is_pid = system("ps aux | grep pluma | tr -s ' ' | cut -d ' ' -f 2 | head  -n1 > PID");
+        int is_pid = system("ps aux | grep wallet-alert | tr -s ' ' | cut -d ' ' -f 2 | head  -n1 > PID");
 
         if (is_pid != 0)
         {
@@ -78,7 +78,7 @@ int save_PID()
  *
  * @return int
  */
-int kill_wallet_lert()
+int kill_wallet_alert()
 {
     string pid;
     string file_path = "./PID";
@@ -164,7 +164,7 @@ int main(int argc, const char *argv[])
 
         case STOP:
         {
-            if (kill_wallet_lert() != 0)
+            if (kill_wallet_alert() != 0)
             {
                 cout << "ERROR: The program has not been stopped!" << endl;
             }
