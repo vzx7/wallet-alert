@@ -77,6 +77,7 @@ int main(int argc, const char *argv[])
         {
         case START:
         {
+            cout << argc << endl;
             worker->setup(argc - 2, argv);
             process->run();
         }
