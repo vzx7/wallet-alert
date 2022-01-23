@@ -15,7 +15,6 @@ private:
 public:
     void setup(int count, const char *argv[])
     {
-        cout << count << endl;
         mailer.set_emails(count, argv);
     }
 };

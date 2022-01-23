@@ -28,7 +28,6 @@ private:
             if (is_pid != 0)
             {
                 throw errmsg;
-                return 1;
             }
         }
         catch (int)
@@ -55,7 +54,6 @@ private:
         if (!file)
         {
             throw "ERROR: The file was not opened!";
-            return 1;
         }
 
         getline(file, pid);
@@ -64,7 +62,6 @@ private:
         {
             file.close();
             throw "ERROR: PID was not found!";
-            return 1;
         }
 
         string command = "kill " + pid;
@@ -75,7 +72,6 @@ private:
         {
             file.close();
             throw "ERROR: The program has not been stopped!";
-            return 1;
         }
 
         file.close();
@@ -83,7 +79,6 @@ private:
         if (remove(file_path.c_str()) != 0)
         {
             throw "ERROR: Файл содержащий PID не был удален!";
-            return 1;
         }
 
         return 0;
@@ -99,7 +94,7 @@ public:
                             analyzer->compareBalance(); },
                           interval); // 3600
 
-        cout << "Start proccess" << endl;
+        cout << "Start process" << endl;
 
         while (true)
             ;
