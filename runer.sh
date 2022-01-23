@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 # Run App
 
-APP="wallet-alert"
+APP="wallet_alert"
 ARGS=$*
 
-build/$APP $ARGS
+cmake-build-debug/$APP "$ARGS"
 
 exit 0

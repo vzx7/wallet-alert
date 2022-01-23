@@ -33,3 +33,5 @@
 PID
 build
 .vscode
+cmake-build-debug
+.idea

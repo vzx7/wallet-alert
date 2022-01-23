@@ -1,8 +1,9 @@
 #include <iostream>
-#include "timer.cpp"
 #include <fstream>
 #include <cstdio>
 #include <string>
+#include "analyzer.cpp"
+#include "headers/timer.h"
 
 using namespace std;
 
@@ -10,6 +11,34 @@ class Process
 {
 private:
     Timer timer;
+    Analyzer *analyzer = new Analyzer();
+
+    /**
+     * @brief Save the process PID of this application to a file named 'PID' in the application's directory.
+     *
+     * @return int
+     */
+    int save_PID()
+    {
+        string errmsg = "ERROR: The PID has not been saved!";
+        try
+        {
+            int is_pid = system("ps aux | grep wallet_alert | tr -s ' ' | cut -d ' ' -f 2 | head  -n1 > PID");
+
+            if (is_pid != 0)
+            {
+                throw errmsg;
+                return 1;
+            }
+        }
+        catch (int)
+        {
+            cout << errmsg << endl;
+            return 1;
+        }
+
+        return 0;
+    };
 
     /**
      * @brief Stop program execution
@@ -65,7 +94,9 @@ public:
     {
         int interval = 5;
         timer.setInterval([&]()
-                          { cout << "Hey.. After each " << interval << "s..." << endl; },
+                          { 
+                            cout << "Hey.. After each " << interval << "s..." << endl; 
+                            analyzer->compareBalance(); },
                           interval); // 3600
 
         cout << "Start proccess" << endl;
@@ -76,6 +107,10 @@ public:
 
     void stop()
     {
+        if (save_PID() != 0)
+        {
+            cout << "ERROR: The PID has not been saved!" << endl;
+        }
         if (kill_wallet_alert() != 0)
         {
             cout << "ERROR: The program has not been stopped!" << endl;
