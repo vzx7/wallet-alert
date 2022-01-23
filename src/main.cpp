@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <string>
 #include "process.cpp"
+#include "worker.cpp"
 
 using namespace std;
 
@@ -49,6 +50,7 @@ Mode get_mode(string arg_mode)
 int main(int argc, const char *argv[])
 {
     Process *process = new Process();
+    Worker *worker = new Worker();
     Mode mode;
     string inst = "!!!***!!!\nThe program must be called with at least one argument - \"mode\".\nRequired argument - \"mode\" was not passed!\nRun the program with an argument: mode=start or mode=stop.\n!!!***!!!";
 
@@ -75,6 +77,7 @@ int main(int argc, const char *argv[])
         {
         case START:
         {
+            worker->setup(argc - 2, argv);
             process->run();
         }
         break;
@@ -93,5 +96,6 @@ int main(int argc, const char *argv[])
     }
 
     delete process;
+    delete worker;
     return 0;
 }
