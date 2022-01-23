@@ -32,3 +32,4 @@
 *.app
 PID
 build
+.vscode
