@@ -4,13 +4,15 @@
 #include <atomic>
 #include "headers/timer.h"
 
+using namespace std;
+
 void Timer::setTimeout(auto function, int delay)
 {
     active = true;
-    std::thread t([=]()
-                  {
+    thread t([=]()
+             {
         if(!active.load()) return;
-        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+        this_thread::sleep_for(chrono::seconds(delay));
         if(!active.load()) return;
         function(); });
     t.detach();
@@ -19,10 +21,10 @@ void Timer::setTimeout(auto function, int delay)
 void Timer::setInterval(auto function, int interval)
 {
     active = true;
-    std::thread t([=]()
-                  {
+    thread t([=]()
+             {
         while(active.load()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(interval));
+            this_thread::sleep_for(chrono::seconds(interval));
             if(!active.load()) return;
             function();
         } });

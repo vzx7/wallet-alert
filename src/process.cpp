@@ -63,11 +63,12 @@ private:
 public:
     void run()
     {
+        int interval = 5;
         timer.setInterval([&]()
-                          { cout << "Hey.. After each 1s..." << endl; },
-                          1000);
+                          { cout << "Hey.. After each " << interval << "s..." << endl; },
+                          interval); // 3600
 
-        cout << "I am Timer" << endl;
+        cout << "Start proccess" << endl;
 
         while (true)
             ;
