@@ -46,6 +46,7 @@ private:
         if (count == 0)
         {
             cout << "New distribution addresses were not transferred!";
+            return;
         }
 
         cout << "New mailing list (" << count << " addresses) sent, old addresses will be deleted!" << endl;
@@ -67,6 +68,7 @@ private:
             i += 1;
         }
 
+        cout << "The new mailing list has been saved..." << endl;
         file.close();
     }
 
