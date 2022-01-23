@@ -110,6 +110,7 @@ public:
         if (save_PID() != 0)
         {
             cout << "ERROR: The PID has not been saved!" << endl;
+            return;
         }
         if (kill_wallet_alert() != 0)
         {
