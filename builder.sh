@@ -5,7 +5,7 @@ APP="wallet-alert"
 
 mkdir -p build
 
-g++ src/main.cpp -std=c++14 -pthread -o build/$APP
+g++ src/main.cpp -pthread -fconcepts -o build/$APP
 
 echo "Congratulations, successful build!!!"
 exit 0

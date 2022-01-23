@@ -9,7 +9,7 @@ using namespace std;
 class Process
 {
 private:
-    Timer t;
+    Timer timer;
 
     /**
      * @brief Save the process PID of this application to a file named 'PID' in the application's directory.
@@ -95,9 +95,9 @@ public:
             cout << "ERROR: The PID has not been saved!" << endl;
         }
 
-        t.setInterval([&]()
-                      { cout << "Hey.. After each 1s..." << endl; },
-                      1000);
+        timer.setInterval([&]()
+                          { cout << "Hey.. After each 1s..." << endl; },
+                          1000);
 
         cout << "I am Timer" << endl;
 
