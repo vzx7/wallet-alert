@@ -87,11 +87,15 @@ private:
 public:
     void run()
     {
-        int interval = 5;
+        int interval = 10;
         timer.setInterval([&]()
                           { 
                             cout << "Hey.. After each " << interval << "s..." << endl; 
-                            analyzer->compareBalance(); },
+                            bool isDone = analyzer->compareBalance();
+                                if (isDone) {
+                                    stop();
+                                }
+                            },
                           interval); // 3600
 
         cout << "Start process" << endl;

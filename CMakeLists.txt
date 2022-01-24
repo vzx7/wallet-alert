@@ -8,7 +8,6 @@ include_directories(src/headers)
 include_directories(src/interfaces)
 
 add_executable(wallet_alert
-        src/enums/bc_type.cc
         src/headers/mailer.h
         src/headers/timer.h
         src/interfaces/message.cc
@@ -18,4 +17,4 @@ add_executable(wallet_alert
         src/mailer.cpp
         src/main.cpp
         src/process.cpp
-        src/worker.cpp)
+        src/worker.cpp src/wallet.cpp src/headers/bc_type.h)

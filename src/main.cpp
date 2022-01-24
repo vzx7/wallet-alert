@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstdio>
 #include <string>
 #include "process.cpp"
 #include "worker.cpp"

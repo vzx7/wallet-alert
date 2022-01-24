@@ -1,24 +1,19 @@
 //
 // Created by zx on 1/24/22.
 //
+#ifndef WALLET_ALERT_TIMER_H
+#define WALLET_ALERT_TIMER_H
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <atomic>
 
-
-
-#ifndef WALLET_ALERT_TIMER_H
-#define WALLET_ALERT_TIMER_H
-
 using namespace std;
 class Timer {
-    std::atomic<bool> active{true};
-
 public:
+    std::atomic<bool> active{true};
     void setTimeout(auto function, int delay);
     void setInterval(auto function, int interval);
-    void stop();
 };
 
 void Timer::setTimeout(auto function, int delay) {
@@ -28,7 +23,9 @@ void Timer::setTimeout(auto function, int delay) {
                  if(!active.load()) return;
                  this_thread::sleep_for(chrono::seconds(delay));
                  if(!active.load()) return;
-                 function(); });
+                 function();
+                 this->active = false;
+             });
     t.detach();
 }
 
@@ -44,7 +41,6 @@ void Timer::setInterval(auto function, int interval)
                  } });
     t.detach();
 }
-
 
 
 #endif //WALLET_ALERT_TIMER_H
