@@ -1,6 +1,8 @@
 #ifndef BIG_INT_H
 #define BIG_INT_H
-
+/**
+ * author https://programforyou.ru/poleznoe/dlinnaya-arifmetika-kak-operirovat-chislami-ne-pomeshchayushchimisya-ni-v-odin-iz-chislovyh-tipov#:~:text=%D0%92%20%D1%8F%D0%B7%D1%8B%D0%BA%D0%B0%D1%85%20C%20%D0%B8%20C%2B%2B,long%20%D0%BE%D1%82%20-9223372036854775808%20%D0%B4%D0%BE%209223372036854775807%20
+ */
 #include <iostream>
 #include <string>
 
