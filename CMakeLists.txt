@@ -17,4 +17,4 @@ add_executable(wallet_alert
         src/mailer.cpp
         src/main.cpp
         src/process.cpp
-        src/worker.cpp src/wallet.cpp src/headers/bc_type.h)
+        src/worker.cpp src/wallet.cpp src/headers/bc_type.h src/headers/constants.h src/headers/BigInt.h src/BigInt.cpp)

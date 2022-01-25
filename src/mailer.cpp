@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void Mailer::set_emails(int count, const char *argv[])
+void Mailer::setEmails(int count, const char *argv[])
 {
     if (count == 0)
     {
@@ -35,4 +35,6 @@ void Mailer::set_emails(int count, const char *argv[])
     file.close();
 }
 
-void Mailer::send_alert() {}
+void Mailer::sendAlert(string text) {
+    cout << text << endl;
+}

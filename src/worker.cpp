@@ -15,6 +15,6 @@ private:
 public:
     void setup(int count, const char *argv[])
     {
-        mailer.set_emails(count, argv);
+        mailer.setEmails(count, argv);
     }
 };

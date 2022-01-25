@@ -1,15 +1,17 @@
 #include <string>
+#include "../headers/constants.h"
 using namespace std;
 
 struct Address {
+    bool isDown;
     string address;
-    int old_balance;
-    int new_balance;
+    string oldBalance;
+    string newBalance;
 };
 struct WalletData {
     string name;
     string url;
     bool isChecked;
     string lastAddress;
-    Address addresses[30];
+    Address addresses[COUNT_ADDRESSES];
 };

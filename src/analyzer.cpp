@@ -6,6 +6,8 @@
 #include <json/value.h>
 #include <json/reader.h>
 #include "headers/mailer.h"
+#include "headers/constants.h"
+#include "headers/BigInt.h"
 #include "wallet.cpp"
 
 using namespace std;
@@ -24,6 +26,17 @@ private:
     int more;
     int less;
 
+    struct Account {
+        bool isFind;
+        string address;
+        string balance;
+    };
+
+    struct SetAlert {
+        bool hasAlert;
+        bool isDown;
+    };
+
     static size_t callback(
             const char* in,
             size_t size,
@@ -35,16 +48,15 @@ private:
         return totalBytes;
     };
 
-    int checkAddress(string address, Wallet *wallet) {
+    int checkAddress(Account account, Wallet *wallet) {
         CURL *curl;
-        CURLcode res;
         std::string readBuffer;
         struct curl_slist *list = NULL;
 
         curl = curl_easy_init();
         cout << "CURL START" << endl;
         if(curl) {
-            string url = wallet->data.url + address;
+            string url = wallet->data.url + account.address;
             string key = "api-key: " + API_KEY;
             list = curl_slist_append(list, key.c_str());
             curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -76,12 +88,11 @@ private:
                     const string balance(jsonData["balance"].asString());
 
                     cout << "Natively parsed:" << std::endl;
-                    cout << wallet->data.name << " address: " << address << endl;
+                    cout << wallet->data.name << " address: " << account.address << endl;
                     cout << "Balance: " << balance << std::endl;
                     cout << endl;
-                    wallet->data.lastAddress = address;
-                    // TODO
-                    checkBalance(balance, balance);
+                    wallet->data.lastAddress = account.address;
+                    checkBalance(wallet, account.balance, balance);
                 }
                 else
                 {
@@ -100,24 +111,78 @@ private:
         return 0;
     }
 
-    void checkBalance(string oldBalance, string newBalance)
-    {
-        int intOldBalance = atoi(newBalance.c_str());
-        int intNewBalance = atoi(oldBalance.c_str());
-        int diff = intNewBalance - intOldBalance;
-        if(diff >= (intOldBalance - (intOldBalance * 0.15))) {
+    int getFreeSlot(Wallet *wallet) {
+        unsigned int slot;
+        for(slot = 0; slot < COUNT_ADDRESSES; slot++) {
+            if (wallet->data.addresses[slot].address.empty()) {
+                break;
+            }
+        }
+        return slot;
+    }
+
+    SetAlert checkAlertForETH(string oldBalance, string newBalance) {
+        SetAlert alertSet;
+        BigInt intOldBalance(oldBalance);
+        BigInt intNewBalance(newBalance);
+        BigInt wei("1000000000000000000");
+        intNewBalance = intNewBalance / wei;
+        BigInt diff = intNewBalance - intOldBalance;
+        BigInt tenProc = (intOldBalance/100) * 10;
+        alertSet.hasAlert = false;
+        if(diff >= tenProc) {
+            alertSet.hasAlert = true;
             more += 1;
-        } else if (diff < (intOldBalance - (intOldBalance * 0.15))) {
+        } else if (diff < tenProc) {
+            alertSet.hasAlert = true;
             less += 1;
+        }
+        alertSet.isDown = diff < 0;
+        return alertSet;
+    }
+
+    void checkBalance(Wallet *wallet, string oldBalance, string newBalance)
+    {
+        SetAlert alertSet;
+        if (wallet->data.name == "ETH") {
+            alertSet = checkAlertForETH(oldBalance, newBalance);
+        } else {
+            unsigned long long intOldBalance = atoll(oldBalance.c_str());
+            unsigned long long intNewBalance = atoll(newBalance.c_str());
+
+            unsigned diff = intNewBalance - intOldBalance;
+            unsigned int tenProc = (intOldBalance/100) * 10;
+            if(diff >= tenProc) {
+                alertSet.hasAlert = true;
+                more += 1;
+            } else if (diff < tenProc) {
+                alertSet.hasAlert = true;
+                less += 1;
+            }
+            alertSet.isDown = diff < 0;
+        }
+
+        if (alertSet.hasAlert) {
+            unsigned int slot = getFreeSlot(wallet);
+            wallet->data.addresses[slot].address = wallet->data.lastAddress;
+            wallet->data.addresses[slot].isDown = alertSet.isDown;
+            wallet->data.addresses[slot].newBalance = newBalance;
+            wallet->data.addresses[slot].oldBalance = oldBalance;
         }
     };
 
-    string getAddress(Wallet *wallet) {
+    Account setAccount(string line) {
+        unsigned int delPos = line.find("|");
+        Account account;
+        account.address = line.substr(0, delPos);
+        account.balance = line.substr(delPos+1);
+        return account;
+    };
 
+    Account getAddress(Wallet *wallet) {
         cout << "Get tne next unverified from " << wallet->data.name << "..." << endl;
         string file_path = "./resource/" + wallet->data.name;
         ifstream file;
-        bool isFind = false;
 
         file.open(file_path);
         if (!file)
@@ -125,29 +190,31 @@ private:
             throw "ERROR: The file currency list was not opened!";
         }
 
-        string address;
-        while (getline(file, address))
+        string line;
+        Account account;
+        account.isFind = false;
+        while (getline(file, line))
         {
-            if ((!wallet->data.lastAddress.empty() && address == wallet->data.lastAddress && getline(file, address))
+            account = setAccount(line);
+            account.isFind = false;
+            if ((!wallet->data.lastAddress.empty() && account.address == wallet->data.lastAddress && getline(file, line))
                     || wallet->data.lastAddress.empty()) {
-                isFind = true;
+                if (line.length() < 5) break;
+                account = setAccount(line);
+                account.isFind = true;
                 break;
             }
         }
-        if (isFind) {
-            return address;
-        }
 
-        return "";
+        return account;
     };
 
     bool checkBCData(Wallet *wallet) {
         cout << "Start check for " + wallet->data.name << endl;
         if (!wallet->data.isChecked) {
-            string address = getAddress(wallet);
-            cout << address << endl;
-            if (!address.empty()) {
-                checkAddress(address, wallet);
+            Account account = getAddress(wallet);
+            if (account.isFind) {
+                checkAddress(account, wallet);
             } else {
                 wallet->data.isChecked = true;
             }
@@ -156,12 +223,46 @@ private:
         return wallet->data.isChecked;
     }
 
+    string createMessage(bool isBullish, WalletData data) {
+        unsigned int i = 0;
+        string msg = "Blockchain " + data.name + "\n\n";
+        while(!data.addresses[i].address.empty() && data.addresses[i].isDown != isBullish) {
+            msg += "Address: " + data.addresses[i].address + ".\n";
+            msg += "Old balance: " + data.addresses[i].oldBalance + ".\n";
+            msg += "New balance: " + data.addresses[i].newBalance + ".\n";
+            i++;
+        }
+        msg += "*********************************************************************\n";
+        return msg;
+    }
+
+    void doAlert(bool isBullish) {
+        string stage = isBullish ? "bullish" : "bearish";
+        string  message = "When analyzing the balances of these addresses, it was revealed that the market is in " + stage + "stage.\n\n";
+        message += createMessage(isBullish, btcWallet->data);
+        message += createMessage(isBullish, ethWallet->data);
+        message += createMessage(isBullish, ltcWallet->data);
+        mailer.sendAlert(message);
+    }
+
 public:
     bool compareBalance()
     {
         if (checkBCData(btcWallet ) && checkBCData(ethWallet ) && checkBCData(ltcWallet )) {
-            if(more - less > 3) {
-                // do something
+            int odds = less - more;
+            bool isBullish = false;
+            bool isFind;
+
+            if(odds >= 2) {
+                isFind = true;
+            } else if(odds <= -2) {
+                isFind = true;
+                isBullish = true;
+            } else {
+                cout << "The market is stable, nothing to worry about..." << endl;
+            }
+            if(isFind) {
+                doAlert(isBullish);
             }
             cout << "The balance of all wallets is checked, the work is over." << endl;
             return true;

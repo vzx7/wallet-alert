@@ -87,7 +87,7 @@ private:
 public:
     void run()
     {
-        int interval = 10;
+        int interval = 3;
         timer.setInterval([&]()
                           { 
                             cout << "Hey.. After each " << interval << "s..." << endl; 
