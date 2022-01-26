@@ -23,9 +23,9 @@ Resource files must be located along the path:
 ```bash
 $HOME/wallet_alert/resources/{BTC ETH LTC date addresses}
 ```
-- **BTC, ETH, LTC** - Files containing lists of wallets in the format: adresses|balance;
+- **BTC, ETH, LTC** - Files containing lists of wallets in the format: address|balance;
 - **date** - Date of last analysis of wallets;
-- **addresses** Mailing List
+- **addresses** - Mailing List
 ### Environment variables
 The application works with two variables:
 $HOME and $API_BC_KEY. The first one stores the path to your home directory. The second must be added via:
