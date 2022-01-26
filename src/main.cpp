@@ -20,7 +20,7 @@ enum Mode
  * @param arg_mode mode
  * @return Mode
  */
-Mode get_mode(string arg_mode)
+Mode getMode(string arg_mode)
 {
     Mode mode;
     string sMode;
@@ -59,7 +59,7 @@ int main(int argc, const char *argv[])
 
     try
     {
-        mode = get_mode(argv[argc - 1]);
+        mode = getMode(argv[argc - 1]);
     }
     catch (const char *msg)
     {

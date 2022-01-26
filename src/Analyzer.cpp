@@ -12,6 +12,16 @@
 
 using namespace std;
 
+struct Account {
+    bool isFind;
+    string address;
+    string balance;
+};
+
+struct SetAlert {
+    bool hasAlert;
+    bool isDown;
+};
 
 class Analyzer
 {
@@ -23,17 +33,6 @@ private:
 
     int more;
     int less;
-
-    struct Account {
-        bool isFind;
-        string address;
-        string balance;
-    };
-
-    struct SetAlert {
-        bool hasAlert;
-        bool isDown;
-    };
 
     static size_t callback(
             const char* in,
