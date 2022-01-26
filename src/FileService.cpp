@@ -40,6 +40,7 @@ string FileService::readFile(unsigned int countLine) {
 
 void FileService::removeFile(string fileName) {
     string filePath = _resourceDir + fileName;
+
     if (remove(filePath.c_str()) != 0)
     {
         throw "ERROR: Файл содержащий PID не был удален!";

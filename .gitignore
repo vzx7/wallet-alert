@@ -35,4 +35,3 @@ build
 .vscode
 cmake-build-debug
 .idea
-resource/addresses

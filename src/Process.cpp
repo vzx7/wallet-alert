@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstdio>
 #include <string>
 #include "Analyzer.cpp"
 #include "headers/Timer.h"
@@ -46,7 +45,6 @@ private:
      */
     int killWalletAlert()
     {
-
         FileService fileService("PID");
         string pid = fileService.readFile();
 
@@ -99,7 +97,6 @@ public:
             return;
         }
         delete analyzer;
-
         if (killWalletAlert() != 0)
         {
             cout << "ERROR: The program has not been stopped!" << endl;
