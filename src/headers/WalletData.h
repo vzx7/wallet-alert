@@ -1,3 +1,9 @@
+//
+// Created by zx on 1/26/22.
+//
+
+#ifndef WALLET_ALERT_WALLETDATA_H
+#define WALLET_ALERT_WALLETDATA_H
 #include <string>
 #include "../headers/constants.h"
 using namespace std;
@@ -15,3 +21,4 @@ struct WalletData {
     string lastAddress;
     Address addresses[COUNT_ADDRESSES];
 };
+#endif //WALLET_ALERT_WALLETDATA_H

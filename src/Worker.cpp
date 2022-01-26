@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
-#include "headers/mailer.h"
+#include "headers/Mailer.h"
 
 using namespace std;
 

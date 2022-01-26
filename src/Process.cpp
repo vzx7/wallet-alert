@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
-#include "analyzer.cpp"
-#include "headers/timer.h"
+#include "Analyzer.cpp"
+#include "headers/Timer.h"
 #include "headers/FileService.h"
 
 using namespace std;

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "process.cpp"
-#include "worker.cpp"
+#include "Process.cpp"
+#include "Worker.cpp"
 
 using namespace std;
 

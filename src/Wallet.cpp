@@ -2,8 +2,8 @@
 // Created by zx on 1/24/22.
 //
 
-#include "headers/bc_type.h"
-#include "structs/wallet_data.cpp"
+#include "headers/BcType.h"
+#include "headers/WalletData.h"
 using namespace std;
 
 class Wallet {

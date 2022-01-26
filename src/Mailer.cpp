@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "headers/mailer.h"
+#include "headers/Mailer.h"
 
 using namespace std;
 

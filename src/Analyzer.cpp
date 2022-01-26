@@ -5,10 +5,10 @@
 #include <curl/curl.h>
 #include <json/value.h>
 #include <json/reader.h>
-#include "headers/mailer.h"
+#include "headers/Mailer.h"
 #include "headers/constants.h"
 #include "headers/BigInt.h"
-#include "wallet.cpp"
+#include "Wallet.cpp"
 #include "headers/FileService.h"
 
 using namespace std;

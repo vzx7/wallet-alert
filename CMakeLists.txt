@@ -8,14 +8,12 @@ include_directories(src/headers)
 include_directories(src/interfaces)
 
 add_executable(wallet_alert
-        src/headers/mailer.h
-        src/headers/timer.h
-        src/interfaces/message.cc
-        src/analyzer.cpp
-        src/bc_service.cpp
-        src/mailer.cpp
+        src/headers/Mailer.h
+        src/headers/Timer.h
+        src/Analyzer.cpp
+        src/Mailer.cpp
         src/main.cpp
-        src/process.cpp
-        src/worker.cpp src/wallet.cpp src/headers/bc_type.h src/headers/constants.h src/headers/BigInt.h src/BigInt.cpp src/FileService.cpp src/headers/FileService.h)
+        src/Process.cpp
+        src/Worker.cpp src/Wallet.cpp src/headers/BcType.h src/headers/constants.h src/headers/BigInt.h src/BigInt.cpp src/FileService.cpp src/headers/FileService.h src/headers/WalletData.h)
 
 
