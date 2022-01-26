@@ -147,7 +147,7 @@ private:
     void checkBalance(Wallet *wallet, string oldBalance, string newBalance)
     {
         SetAlert alertSet;
-        if (wallet->data.name == "ETH") {
+        if (wallet->data.name == ETH_NAME) {
             alertSet = checkAlertForETH(oldBalance, newBalance);
         } else {
             unsigned long long intOldBalance = atoll(oldBalance.c_str());
