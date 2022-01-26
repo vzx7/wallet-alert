@@ -1,9 +1,9 @@
 #include <iostream>
-#include <fstream>
 #include <cstdio>
 #include <string>
 #include "analyzer.cpp"
 #include "headers/timer.h"
+#include "headers/FileService.h"
 
 using namespace std;
 
@@ -18,12 +18,12 @@ private:
      *
      * @return int
      */
-    int save_PID()
+    int savePID()
     {
         string errmsg = "ERROR: The PID has not been saved!";
         try
         {
-            int is_pid = system("ps aux | grep wallet_alert | tr -s ' ' | cut -d ' ' -f 2 | head  -n1 > PID");
+            int is_pid = system("ps aux | grep wallet_alert | tr -s ' ' | cut -d ' ' -f 2 | head  -n1 > $HOME/wallet_alert/resources/PID");
 
             if (is_pid != 0)
             {
@@ -44,24 +44,15 @@ private:
      *
      * @return int
      */
-    int kill_wallet_alert()
+    int killWalletAlert()
     {
-        string pid;
-        string file_path = "./PID";
-        ifstream file;
 
-        file.open(file_path);
-        if (!file)
-        {
-            throw "ERROR: The file was not opened!";
-        }
+        FileService fileService("PID");
+        string pid = fileService.readFile();
 
-        getline(file, pid);
-
-        if (pid.empty())
-        {
-            file.close();
-            throw "ERROR: PID was not found!";
+        if (pid.empty()) {
+            fileService.closeFile();
+            throw "PID NOT FOUND";
         }
 
         string command = "kill " + pid;
@@ -70,16 +61,12 @@ private:
 
         if (is_kill != 0)
         {
-            file.close();
+            fileService.closeFile();
             throw "ERROR: The program has not been stopped!";
         }
 
-        file.close();
-
-        if (remove(file_path.c_str()) != 0)
-        {
-            throw "ERROR: Файл содержащий PID не был удален!";
-        }
+        fileService.closeFile();
+        fileService.removeFile("PID");
 
         return 0;
     };
@@ -106,12 +93,14 @@ public:
 
     void stop()
     {
-        if (save_PID() != 0)
+        if (savePID() != 0)
         {
             cout << "ERROR: The PID has not been saved!" << endl;
             return;
         }
-        if (kill_wallet_alert() != 0)
+        delete analyzer;
+
+        if (killWalletAlert() != 0)
         {
             cout << "ERROR: The program has not been stopped!" << endl;
         }

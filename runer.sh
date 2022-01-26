@@ -3,6 +3,6 @@
 
 APP="wallet_alert"
 
-cmake-build-debug/$APP $*
+./build/$APP $*
 
 exit 0

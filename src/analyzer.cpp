@@ -9,16 +9,15 @@
 #include "headers/constants.h"
 #include "headers/BigInt.h"
 #include "wallet.cpp"
+#include "headers/FileService.h"
 
 using namespace std;
 
-const string API_KEY = getenv("API_BC_KEY");
 
 class Analyzer
 {
 private:
     Mailer mailer;
-
     Wallet *btcWallet = new Wallet(BTC);
     Wallet *ethWallet = new Wallet(ETH);
     Wallet *ltcWallet = new Wallet(LTC);
@@ -52,12 +51,17 @@ private:
         CURL *curl;
         std::string readBuffer;
         struct curl_slist *list = NULL;
-
+        string apiKey;
+        try {
+            apiKey = getenv("API_BC_KEY");
+        } catch(const char *msg) {
+            cout << "API KEY NOT FOUND..." << endl;
+        }
         curl = curl_easy_init();
         cout << "CURL START" << endl;
         if(curl) {
             string url = wallet->data.url + account.address;
-            string key = "api-key: " + API_KEY;
+            string key = "api-key: " + apiKey;
             list = curl_slist_append(list, key.c_str());
             curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
             curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
@@ -181,23 +185,18 @@ private:
 
     Account getAddress(Wallet *wallet) {
         cout << "Get tne next unverified from " << wallet->data.name << "..." << endl;
-        string file_path = "./resource/" + wallet->data.name;
-        ifstream file;
-
-        file.open(file_path);
-        if (!file)
-        {
-            throw "ERROR: The file currency list was not opened!";
-        }
-
+        string fileName = wallet->data.name;
         string line;
+        FileService fileService(fileName);
+        fileService.openFile();
+
         Account account;
         account.isFind = false;
-        while (getline(file, line))
+        while (getline(fileService.file, line))
         {
             account = setAccount(line);
             account.isFind = false;
-            if ((!wallet->data.lastAddress.empty() && account.address == wallet->data.lastAddress && getline(file, line))
+            if ((!wallet->data.lastAddress.empty() && account.address == wallet->data.lastAddress && getline(fileService.file, line))
                     || wallet->data.lastAddress.empty()) {
                 if (line.length() < 5) break;
                 account = setAccount(line);
@@ -205,7 +204,7 @@ private:
                 break;
             }
         }
-
+        fileService.closeFile();
         return account;
     };
 
@@ -227,18 +226,18 @@ private:
         unsigned int i = 0;
         string msg = "Blockchain " + data.name + "\n\n";
         while(!data.addresses[i].address.empty() && data.addresses[i].isDown != isBullish) {
-            msg += "Address: " + data.addresses[i].address + ".\n";
-            msg += "Old balance: " + data.addresses[i].oldBalance + ".\n";
+            msg += "Address: " + data.addresses[i].address + ":\n";
+            msg += "Old balance: " + data.addresses[i].oldBalance + ",\n";
             msg += "New balance: " + data.addresses[i].newBalance + ".\n";
             i++;
         }
-        msg += "*********************************************************************\n";
+        msg += "*********************************************************************\n\n";
         return msg;
     }
 
     void doAlert(bool isBullish) {
         string stage = isBullish ? "bullish" : "bearish";
-        string  message = "When analyzing the balances of these addresses, it was revealed that the market is in " + stage + "stage.\n\n";
+        string  message = "When analyzing the balances of these addresses, it was revealed that the market is in " + stage + " stage.\n\n";
         message += createMessage(isBullish, btcWallet->data);
         message += createMessage(isBullish, ethWallet->data);
         message += createMessage(isBullish, ltcWallet->data);
@@ -248,7 +247,11 @@ private:
 public:
     bool compareBalance()
     {
-        if (checkBCData(btcWallet ) && checkBCData(ethWallet ) && checkBCData(ltcWallet )) {
+        if (
+            checkBCData(btcWallet )
+            && checkBCData(ethWallet )
+            && checkBCData(ltcWallet )) {
+
             int odds = less - more;
             bool isBullish = false;
             bool isFind;

@@ -34,6 +34,7 @@ void Timer::setInterval(auto function, int interval)
     active = true;
     thread t([=]()
              {
+                cout << "INTERVAL..." << endl;
                  while(active.load()) {
                      this_thread::sleep_for(chrono::seconds(interval));
                      if(!active.load()) return;
